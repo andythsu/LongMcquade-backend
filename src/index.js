@@ -1,26 +1,31 @@
 const express = require("express");
 const app = express();
 const config = require("./config.js");
+const bodyParser = require("body-parser");
+const mysql = require("mysql");
 
 const { dbConfig, serverConfig } = config;
 
-const { EntryApi } = require("./api");
+const { DbService } = require("./services");
 
-const mysql = require("mysql");
+const { UserApi } = require("./apis");
 
-var connection = mysql.createConnection(dbConfig);
+app.use(bodyParser.json());
+app.use("/user", UserApi);
 
-console.log("connection: ", connection);
+try {
+  var connection = mysql.createConnection(dbConfig);
+  connection.connect(err => {
+    if (err) {
+      throw new Error(err);
+    }
+    console.log("connected");
+    DbService.setConnection(connection);
+  });
+} catch (err) {
+  console.error(err);
+}
 
-connection.connect(function(err) {
-  if (err) {
-    console.error("error connecting: " + err.stack);
-    return;
-  }
-
-  console.log("connected as id " + connection.threadId);
+app.listen(serverConfig.port, () => {
+  console.log(`server is listening on port ${serverConfig.port}`);
 });
-
-app.listen(serverConfig.port, () =>
-  console.log(`Example app listening on port ${serverConfig.port}!`)
-);
