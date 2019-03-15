@@ -6,19 +6,53 @@ module.exports = (() => {
   const OrganizationService = require("./organization.service.js");
   const { UserRole } = require("../constants");
 
-  function getUserByNameAndPassword(reqBody){
-    const { name, password } = reqBody;
+  function getUserByNameAndPassword(reqBody) {
+    const { username, password } = reqBody;
     return new Promise((resolve, reject) => {
       const dbConnection = DbService.getConnection();
-      const sql = `select * from user where name = '${name}' AND password = '${password}'`;
+      const sql = `select * from user where name = '${username}' AND password = '${password}'`;
       dbConnection.query(sql, (err, result) => {
         if (err) {
           reject(err);
           return;
         }
-        
-        resolve(result[0]);
+        let userResult = result[0];
 
+        if (userResult.type == UserRole.STUDENT) {
+          StudentService.getStudentById(userResult.id)
+            .then(studentResult => {
+              const { instrument } = studentResult;
+              resolve({
+                ...userResult,
+                instrument
+              });
+            })
+            .catch();
+        } else if (userResult.type == UserRole.TUTOR) {
+          TutorService.getTutorById(userResult.id)
+            .then(tutorResult => {
+              const { location, instrument } = tutorResult;
+              resolve({ ...userResult, location, instrument });
+            })
+            .catch();
+        } else if (userResult.type == UserRole.MUSICIAN) {
+          MusicianService.getMusicianById(userResult.id)
+            .then(musicianResult => {
+              const { instrument } = musicianResult;
+              resolve({ ...userResult, instrument });
+            })
+            .catch();
+        } else if (userResult.type == UserRole.ORGANIZATION) {
+          OrganizationService.getOrganizationById(userResult.id)
+            .then(organizationResult => {
+              const { orgName } = organizationResult;
+              resolve({ ...userResult, orgName });
+            })
+            .catch();
+        } else {
+          const error = "cannot determine user type";
+          resolve({ error });
+        }
       });
     });
   }
@@ -69,19 +103,19 @@ module.exports = (() => {
   function insertUserRole(reqBody) {
     const { type } = reqBody;
     return new Promise((resolve, reject) => {
-      if (UserRole[type] === "student") {
+      if (type == UserRole.STUDENT) {
         StudentService.insertStudent(reqBody)
           .then(res => resolve(res))
           .catch(err => reject(err));
-      } else if (UserRole[type] === "tutor") {
+      } else if (type == UserRole.TUTOR) {
         TutorService.insertTutor(reqBody)
           .then(res => resolve(res))
           .catch(err => reject(err));
-      } else if (UserRole[type] === "musician") {
+      } else if (type == UserRole.MUSICIAN) {
         MusicianService.insertMusician(reqBody)
           .then(res => resolve(res))
           .catch(err => reject(err));
-      } else if (UserRole[type] === "organization") {
+      } else if (type == UserRole.ORGANIZATION) {
         OrganizationService.insertOrganization(reqBody)
           .then(res => resolve(res))
           .catch(err => reject(err));

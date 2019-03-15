@@ -22,5 +22,19 @@ module.exports = (() => {
     });
   }
 
-  return { insertTutor };
+  function getTutorById(id) {
+    return new Promise((resolve, reject) => {
+      const dbConnection = DbService.getConnection();
+      const sql = `select * from tutor where id = ${id}`;
+      dbConnection.query(sql, (err, result) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+        resolve(result[0]);
+      });
+    });
+  }
+
+  return { insertTutor, getTutorById };
 })();

@@ -14,6 +14,14 @@ module.exports = (() => {
       });
   });
 
+  router.post("/userLogin", (req, res) => {
+    UserService.getUserByNameAndPassword(req.body)
+      .then(result => {
+        res.send(result);
+      })
+      .catch();
+  });
+
   router.post("/", (req, res) => {
     UserService.insertUser(req.body)
       .then(result => {

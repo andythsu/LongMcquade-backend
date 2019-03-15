@@ -1,6 +1,6 @@
 module.exports = {
-  0: "student",
-  1: "tutor",
-  2: "musician",
-  3: "organization"
+  STUDENT: 0,
+  TUTOR: 1,
+  MUSICIAN: 2,
+  ORGANIZATION: 3
 };
