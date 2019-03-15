@@ -6,6 +6,23 @@ module.exports = (() => {
   const OrganizationService = require("./organization.service.js");
   const { UserRole } = require("../constants");
 
+  function getUserByNameAndPassword(reqBody){
+    const { name, password } = reqBody;
+    return new Promise((resolve, reject) => {
+      const dbConnection = DbService.getConnection();
+      const sql = `select * from user where name = '${name}' AND password = '${password}'`;
+      dbConnection.query(sql, (err, result) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+        
+        resolve(result[0]);
+
+      });
+    });
+  }
+
   function getAllUsers() {
     return new Promise((resolve, reject) => {
       const sql = "select * from user";
@@ -75,5 +92,5 @@ module.exports = (() => {
     });
   }
 
-  return { insertUser, getAllUsers };
+  return { insertUser, getAllUsers, getUserByNameAndPassword };
 })();
