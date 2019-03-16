@@ -30,7 +30,7 @@ module.exports = (() => {
       })
       .catch(err => {
         console.error(err);
-        res.send(err);
+        res.send({ error: err, message: err.sqlMessage });
       });
   });
 

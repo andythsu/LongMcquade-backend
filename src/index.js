@@ -8,7 +8,7 @@ const { dbConfig, serverConfig } = config;
 
 const { DbService } = require("./services");
 
-const { UserApi, ForumApi } = require("./apis");
+const { UserApi, ForumApi, TutorApi, StudentApi } = require("./apis");
 
 app.use(function(req, res, next) {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -23,6 +23,8 @@ app.use(function(req, res, next) {
 app.use(bodyParser.json());
 app.use("/user", UserApi);
 app.use("/forum", ForumApi);
+app.use("/tutor", TutorApi);
+app.use("/student", StudentApi);
 
 try {
   var connection = mysql.createConnection(dbConfig);

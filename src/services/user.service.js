@@ -79,7 +79,9 @@ module.exports = (() => {
       const sql = `insert into user(name, age, gender, password, type) values ('${name}', ${age}, ${gender}, '${password}', ${type})`;
       dbConnection.query(sql, (err, result) => {
         if (err) {
-          reject(err);
+          reject({
+            message: err.sqlMessage
+          });
           return;
         }
         const { insertId } = result;
@@ -94,7 +96,9 @@ module.exports = (() => {
             })
           )
           .catch(err => {
-            reject(err);
+            reject({
+              message: err.sqlMessage
+            });
           });
       });
     });

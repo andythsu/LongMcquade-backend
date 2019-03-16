@@ -12,5 +12,15 @@ module.exports = (() => {
       .catch();
   });
 
+  router.post("/", (req, res) => {
+    ForumService.insertForum(req.body)
+      .then(result => {
+        res.send(result);
+      })
+      .catch(error => {
+        res.send({ error });
+      });
+  });
+
   return router;
 })();
