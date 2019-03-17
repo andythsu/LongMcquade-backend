@@ -79,9 +79,15 @@ module.exports = (() => {
       const sql = `insert into user(name, age, gender, password, type) values ('${name}', ${age}, ${gender}, '${password}', ${type})`;
       dbConnection.query(sql, (err, result) => {
         if (err) {
-          reject({
-            message: err.sqlMessage
-          });
+          if (err.errno == 1062) {
+            reject({
+              message: "username has already been registered"
+            });
+          } else {
+            reject({
+              message: err.sqlMessage
+            });
+          }
           return;
         }
         const { insertId } = result;

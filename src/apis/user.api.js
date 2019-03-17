@@ -28,9 +28,8 @@ module.exports = (() => {
         const message = "inserted successfully";
         res.send({ message, result });
       })
-      .catch(err => {
-        console.error(err);
-        res.send({ error: err, message: err.sqlMessage });
+      .catch(error => {
+        res.send({ error });
       });
   });
 
