@@ -43,6 +43,8 @@ try {
   // console.error(err);
 }
 
-app.listen(serverConfig.port, () => {
-  console.log(`server is listening on port ${serverConfig.port}`);
+var server = app.listen(serverConfig.port, function() {
+  var host = server.address().address;
+  var port = server.address().port;
+  console.log("running at http://" + host + ":" + port);
 });
