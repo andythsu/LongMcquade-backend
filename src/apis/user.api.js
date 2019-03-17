@@ -19,7 +19,9 @@ module.exports = (() => {
       .then(result => {
         res.send(result);
       })
-      .catch();
+      .catch(error => {
+        res.send({ error });
+      });
   });
 
   router.post("/", (req, res) => {

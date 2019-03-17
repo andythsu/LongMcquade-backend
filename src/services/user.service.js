@@ -13,9 +13,18 @@ module.exports = (() => {
       const sql = `select * from user where name = '${username}' AND password = '${password}'`;
       dbConnection.query(sql, (err, result) => {
         if (err) {
-          reject(err);
+          reject({
+            message: err.sqlMessage
+          });
           return;
         }
+        if (result.length <= 0) {
+          reject({
+            message: `Wrong credentials or user doesn't exist`
+          });
+          return;
+        }
+
         let userResult = result[0];
 
         if (userResult.type == UserRole.STUDENT) {
@@ -116,19 +125,19 @@ module.exports = (() => {
       if (type == UserRole.STUDENT) {
         StudentService.insertStudent(reqBody)
           .then(res => resolve(res))
-          .catch(err => reject(err));
+          .catch(error => reject(error));
       } else if (type == UserRole.TUTOR) {
         TutorService.insertTutor(reqBody)
           .then(res => resolve(res))
-          .catch(err => reject(err));
+          .catch(error => reject(error));
       } else if (type == UserRole.MUSICIAN) {
         MusicianService.insertMusician(reqBody)
           .then(res => resolve(res))
-          .catch(err => reject(err));
+          .catch(error => reject(error));
       } else if (type == UserRole.ORGANIZATION) {
         OrganizationService.insertOrganization(reqBody)
           .then(res => resolve(res))
-          .catch(err => reject(err));
+          .catch(error => reject(error));
       } else {
         const error = "cannot determine user type";
         reject({ error });
