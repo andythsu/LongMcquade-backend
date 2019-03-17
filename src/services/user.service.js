@@ -84,6 +84,9 @@ module.exports = (() => {
   function insertUser(reqBody) {
     const { name, age, gender, password, type } = reqBody;
     return new Promise((resolve, reject) => {
+      if (!name || !age || !gender || !password || !type) {
+        reject({ message: "fields not satisfied" });
+      }
       const dbConnection = DbService.getConnection();
       const sql = `insert into user(name, age, gender, password, type) values ('${name}', ${age}, ${gender}, '${password}', ${type})`;
       dbConnection.query(sql, (err, result) => {

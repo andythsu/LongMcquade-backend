@@ -21,14 +21,14 @@ app.use(function(req, res, next) {
 });
 
 app.use(bodyParser.json());
-app.use("/", (req, res) => {
-  res.send("hello world");
-});
 app.use("/user", UserApi);
 app.use("/forum", ForumApi);
 app.use("/tutor", TutorApi);
 app.use("/student", StudentApi);
 app.use("/org", OrgApi);
+app.use("/", (req, res) => {
+  res.send("hello world");
+});
 
 let connectionConfig = {};
 
