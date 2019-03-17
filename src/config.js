@@ -4,7 +4,16 @@ const dbConfig = {
   password: "",
   database: "longmcquade"
 };
-const serverConfig = {
-  port: process.env.PORT || 3000
+
+const dbProdConfig = {
+  host: "sql9.freemysqlhosting.net",
+  user: "sql9283773",
+  password: "qfy5u2iddr",
+  database: "sql9283773"
 };
-module.exports = { dbConfig, serverConfig };
+
+const serverConfig = {
+  port: process.env.PORT || 3000,
+  prod: true
+};
+module.exports = { dbConfig, serverConfig, dbProdConfig };

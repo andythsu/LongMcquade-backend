@@ -4,7 +4,7 @@ module.exports = (() => {
   function getAllPerformance() {
     return new Promise((resolve, reject) => {
       const dbConnection = DbService.getConnection();
-      const sql = `select * from performance_info inner join organization on performance_info.organizationId = organization.id inner join organization_performance_instrument on organization_performance_instrument.performanceId = performance_info.id`;
+      const sql = `select * from performance_info inner join (select id as organizationId, orgName, orgPhone from organization) as organization on performance_info.organizationId = organization.organizationId inner join (select id as organization_performance_instrument_id, organizationId, performanceId from organization_performance_instrument) as organization_performance_instrument on organization_performance_instrument.performanceId = performance_info.id`;
       dbConnection.query(sql, (err, result) => {
         if (err) {
           console.error(err);

@@ -4,7 +4,7 @@ const config = require("./config.js");
 const bodyParser = require("body-parser");
 const mysql = require("mysql");
 
-const { dbConfig, serverConfig } = config;
+const { dbConfig, serverConfig, dbProdConfig } = config;
 
 const { DbService } = require("./services");
 
@@ -30,13 +30,21 @@ app.use("/tutor", TutorApi);
 app.use("/student", StudentApi);
 app.use("/org", OrgApi);
 
+let connectionConfig = {};
+
+if (serverConfig.prod) {
+  connectionConfig = dbProdConfig;
+} else {
+  connectionConfig = dbConfig;
+}
+
 try {
-  var connection = mysql.createConnection(dbConfig);
+  var connection = mysql.createConnection(connectionConfig);
   connection.connect(err => {
     if (err) {
       // throw new Error(err);
     }
-    console.log("connected");
+    console.log("connected to", connection.config.host);
     DbService.setConnection(connection);
   });
 } catch (err) {
