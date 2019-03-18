@@ -10,20 +10,23 @@ module.exports = (() => {
         // combine instrument with same performance id
         let combineInstrument = {};
         results.map(result => {
-          if (combineInstrument[result.performanceId]) {
-            combineInstrument[result.performanceId].instrument =
-              combineInstrument[result.performanceId].instrument +
+          if (combineInstrument[result.id]) {
+            combineInstrument[result.id].instrument =
+              combineInstrument[result.id].instrument +
               ", " +
               result.instrument;
           } else {
-            combineInstrument[result.performanceId] = result;
+            // if no missing instruments
+            if (!result.instrument) {
+              result.instrument = "none";
+            }
+            combineInstrument[result.id] = result;
           }
         });
         return combineInstrument;
       })
       .then(combineInstrument => {
         // transform into array
-        console.log(combineInstrument);
         let results = [];
         Object.keys(combineInstrument).forEach((value, index, arr) => {
           results.push(combineInstrument[value]);
@@ -46,13 +49,16 @@ module.exports = (() => {
         // combine instrument with same performance id
         let combineInstrument = {};
         results.map(result => {
-          if (combineInstrument[result.performanceId]) {
-            combineInstrument[result.performanceId].instrument =
-              combineInstrument[result.performanceId].instrument +
+          if (combineInstrument[result.id]) {
+            combineInstrument[result.id].instrument =
+              combineInstrument[result.id].instrument +
               ", " +
               result.instrument;
           } else {
-            combineInstrument[result.performanceId] = result;
+            if (!result.instrument) {
+              result.instrument = "none";
+            }
+            combineInstrument[result.id] = result;
           }
         });
         return combineInstrument;
