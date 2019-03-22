@@ -70,7 +70,7 @@ module.exports = (() => {
   function getAllTutorAvailableTime() {
     return new Promise((resolve, reject) => {
       const dbConnection = DbService.getConnection();
-      const sql = `select * from tutor INNER join (select id as available_time_id, tutorId, time from available_time) as available_time on tutor.id = available_time.tutorId inner join user on tutor.id = user.id where available_time.available_time_id not in (select class_info.available_time from class_info) order by user.name ASC`;
+      const sql = `select * from tutor INNER join (select id as available_time_id, tutorId, time from available_time) as available_time on tutor.id = available_time.tutorId inner join user on tutor.id = user.id where available_time.available_time_id not in (select class_info.available_time from class_info) order by user.name ASC, available_time.time ASC`;
       dbConnection.query(sql, (err, result) => {
         if (err) {
           console.log("sql", sql);
