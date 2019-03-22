@@ -49,12 +49,15 @@ module.exports = (() => {
           return;
         }
         let visited = [];
-        results = results.map(result => {
-          if (!visited.includes(result.tutorId)) {
-            visited.push(result.tutorId);
-            return result;
-          }
-        });
+        let rtn = [];
+        results = results
+          .map(result => {
+            if (!visited.includes(result.tutorId)) {
+              visited.push(result.tutorId);
+              return result;
+            }
+          })
+          .filter(result => result);
         resolve(results);
       });
     });
