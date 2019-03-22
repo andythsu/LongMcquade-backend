@@ -49,7 +49,6 @@ module.exports = (() => {
           return;
         }
         let visited = [];
-        let rtn = [];
         results = results
           .map(result => {
             if (!visited.includes(result.tutorId)) {
