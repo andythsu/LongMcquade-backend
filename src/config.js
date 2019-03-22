@@ -14,6 +14,6 @@ const dbProdConfig = {
 
 const serverConfig = {
   port: process.env.PORT || 3000,
-  prod: true
+  prod: false
 };
 module.exports = { dbConfig, serverConfig, dbProdConfig };

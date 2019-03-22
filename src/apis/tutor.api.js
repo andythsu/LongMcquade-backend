@@ -44,6 +44,17 @@ module.exports = (() => {
       });
   });
 
+  router.get("/:id/passedClasses", (req, res) => {
+    const id = req.params.id;
+    TutorService.getPassedClasses(id)
+      .then(results => {
+        res.send(results);
+      })
+      .catch(error => {
+        res.send({ error });
+      });
+  });
+
   router.post("/book", (req, res) => {
     TutorService.bookTutor(req.body)
       .then(result => {

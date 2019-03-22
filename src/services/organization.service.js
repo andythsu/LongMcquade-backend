@@ -4,9 +4,7 @@ module.exports = (() => {
   function getAllPerformance() {
     return new Promise((resolve, reject) => {
       const dbConnection = DbService.getConnection();
-      const sql = `select * from performance_info inner join (select id as organizationId, orgName, orgPhone from organization) as organization on performance_info.organizationId = organization.organizationId inner join (select id as organization_performance_instrument_id, organizationId, performanceId, instrument from organization_performance_instrument) as organization_performance_instrument on organization_performance_instrument.performanceId = performance_info.id`;
-      // this query gets performances with no missing instruments
-      // const sql = `select * from performance_info inner join (select id as organizationId, orgName, orgPhone from organization) as organization on performance_info.organizationId = organization.organizationId left join (select id as organization_performance_instrument_id, organizationId, performanceId, instrument from organization_performance_instrument) as organization_performance_instrument on organization_performance_instrument.performanceId = performance_info.id`;
+      const sql = `select * from performance_info inner join (select id as organizationId, orgName, orgPhone from organization) as organization on performance_info.organizationId = organization.organizationId inner join (select id as organization_performance_instrument_id, organizationId, performanceId, instrument from organization_performance_instrument) as organization_performance_instrument on organization_performance_instrument.performanceId = performance_info.id WHERE performance_info.time >= now() order by performance_info.time asc`;
       dbConnection.query(sql, (err, result) => {
         if (err) {
           console.error(err);
@@ -23,7 +21,24 @@ module.exports = (() => {
   function getPerformance(id) {
     return new Promise((resolve, reject) => {
       const dbConnection = DbService.getConnection();
-      const sql = `select * from performance_info inner join (select id as orgId, orgName, orgPhone from organization) as organization on performance_info.organizationId = organization.orgId left join (select id as organization_performance_instrument_id, instrument, organizationId, performanceId from organization_performance_instrument) as organization_performance_instrument on performance_info.id = organization_performance_instrument.performanceId where performance_info.organizationId=${id} order by performance_info.time asc`;
+      const sql = `select * from performance_info inner join (select id as orgId, orgName, orgPhone from organization) as organization on performance_info.organizationId = organization.orgId left join (select id as organization_performance_instrument_id, instrument, organizationId, performanceId from organization_performance_instrument) as organization_performance_instrument on performance_info.id = organization_performance_instrument.performanceId where performance_info.organizationId=${id} AND performance_info.time >= now() order by performance_info.time asc`;
+      dbConnection.query(sql, (err, result) => {
+        if (err) {
+          console.error(err);
+          reject({
+            message: err.sqlMessage
+          });
+          return;
+        }
+        resolve(result);
+      });
+    });
+  }
+
+  function getOldPerformance(id) {
+    return new Promise((resolve, reject) => {
+      const dbConnection = DbService.getConnection();
+      const sql = `select * from performance_info inner join (select id as orgId, orgName, orgPhone from organization) as organization on performance_info.organizationId = organization.orgId left join (select id as organization_performance_instrument_id, instrument, organizationId, performanceId from organization_performance_instrument) as organization_performance_instrument on performance_info.id = organization_performance_instrument.performanceId where performance_info.organizationId=${id} AND performance_info.time <= now() order by performance_info.time asc`;
       dbConnection.query(sql, (err, result) => {
         if (err) {
           console.error(err);
@@ -122,6 +137,7 @@ module.exports = (() => {
     getOrganizationById,
     insertPerformance,
     getPerformance,
-    getAllPerformance
+    getAllPerformance,
+    getOldPerformance
   };
 })();

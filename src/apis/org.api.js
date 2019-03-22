@@ -42,6 +42,44 @@ module.exports = (() => {
       .catch(error => res.send({ error }));
   });
 
+  router.get("/:id/oldPerformance", (req, res) => {
+    const id = req.params.id;
+    OrgService.getOldPerformance(id)
+      .then(results => {
+        // combine instrument with same performance id
+        let combineInstrument = {};
+        results.map(result => {
+          if (combineInstrument[result.id]) {
+            combineInstrument[result.id].instrument =
+              combineInstrument[result.id].instrument +
+              ", " +
+              result.instrument;
+          } else {
+            if (!result.instrument) {
+              result.instrument = "none";
+            }
+            combineInstrument[result.id] = result;
+          }
+        });
+        return combineInstrument;
+      })
+      .then(combineInstrument => {
+        // transform into array
+        let results = [];
+        Object.keys(combineInstrument).forEach((value, index, arr) => {
+          results.push(combineInstrument[value]);
+        });
+        return results;
+      })
+      .then(results => {
+        results.sort((a, b) => {
+          return -1 * (new Date(b.time) - new Date(a.time));
+        });
+        res.send(results);
+      })
+      .catch(error => res.send({ error }));
+  });
+
   router.get("/:id/performance", (req, res) => {
     const id = req.params.id;
     OrgService.getPerformance(id)

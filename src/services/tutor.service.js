@@ -21,7 +21,21 @@ module.exports = (() => {
   function getUpcomingClasses(tutorId) {
     return new Promise((resolve, reject) => {
       const dbConnection = DbService.getConnection();
-      const sql = `select * from tutor inner join (select id as class_info_id, studentId, tutorId, available_time from class_info) as class_info on tutor.id = class_info.tutorId inner join (select id as student_id from student) as student on student.student_id = class_info.studentId inner join (select id as user_id, name as student_name from user) as user on student.student_id = user.user_id inner join (select id as available_time_id, time from available_time) as available_time on available_time.available_time_id = class_info.available_time where tutor.id = ${tutorId}`;
+      const sql = `select * from tutor inner join (select id as class_info_id, studentId, tutorId, available_time from class_info) as class_info on tutor.id = class_info.tutorId inner join (select id as student_id from student) as student on student.student_id = class_info.studentId inner join (select id as user_id, name as student_name from user) as user on student.student_id = user.user_id inner join (select id as available_time_id, time from available_time) as available_time on available_time.available_time_id = class_info.available_time where tutor.id = ${tutorId} AND available_time.time >= now() order by available_time.time asc`;
+      dbConnection.query(sql, (err, result) => {
+        if (err) {
+          console.log("sql", sql);
+          reject(err);
+        }
+        resolve(result);
+      });
+    });
+  }
+
+  function getPassedClasses(tutorId) {
+    return new Promise((resolve, reject) => {
+      const dbConnection = DbService.getConnection();
+      const sql = `select * from tutor inner join (select id as class_info_id, studentId, tutorId, available_time from class_info) as class_info on tutor.id = class_info.tutorId inner join (select id as student_id from student) as student on student.student_id = class_info.studentId inner join (select id as user_id, name as student_name from user) as user on student.student_id = user.user_id inner join (select id as available_time_id, time from available_time) as available_time on available_time.available_time_id = class_info.available_time where tutor.id = ${tutorId} AND available_time.time <= now() order by available_time.time asc`;
       dbConnection.query(sql, (err, result) => {
         if (err) {
           console.log("sql", sql);
@@ -126,6 +140,7 @@ module.exports = (() => {
     bookTutor,
     getUpcomingClasses,
     insertAvailableTime,
-    getTutorAvailableTime
+    getTutorAvailableTime,
+    getPassedClasses
   };
 })();

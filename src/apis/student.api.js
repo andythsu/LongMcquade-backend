@@ -28,6 +28,18 @@ module.exports = (() => {
       });
   });
 
+  router.get("/:id/passedClasses", (req, res) => {
+    const id = req.params.id;
+    StudentService.getPassedClasses(id)
+      .then(results => {
+        res.send(results);
+      })
+      .catch(err => {
+        console.error(err);
+        res.send({ error: err });
+      });
+  });
+
   router.post("/:id/rateTutor", (req, res) => {
     StudentService.rateTutor(req.body)
       .then(result => {
