@@ -6,10 +6,10 @@ const dbConfig = {
 };
 
 const dbProdConfig = {
-  host: "sql9.freemysqlhosting.net",
-  user: "sql9283773",
-  password: "qfy5u2iddr",
-  database: "sql9283773"
+  host: "remotemysql.com",
+  user: "2dqTYhXoQo",
+  password: "ZVv85fDuQq",
+  database: "2dqTYhXoQo"
 };
 
 const serverConfig = {
