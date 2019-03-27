@@ -34,9 +34,9 @@ module.exports = (() => {
         return results;
       })
       .then(results => {
-        results.sort((a, b) => {
-          return -1 * (new Date(b.time) - new Date(a.time));
-        });
+        // results.sort((a, b) => {
+        //   return -1 * (new Date(b.time) - new Date(a.time));
+        // });
         res.send(results);
       })
       .catch(error => res.send({ error }));
@@ -72,9 +72,9 @@ module.exports = (() => {
         return results;
       })
       .then(results => {
-        results.sort((a, b) => {
-          return -1 * (new Date(b.time) - new Date(a.time));
-        });
+        // results.sort((a, b) => {
+        //   return -1 * (new Date(b.time) - new Date(a.time));
+        // });
         res.send(results);
       })
       .catch(error => res.send({ error }));
