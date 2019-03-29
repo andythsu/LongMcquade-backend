@@ -23,6 +23,16 @@ module.exports = (() => {
       .catch();
   });
 
+  router.get("/:id/rate", (req, res) => {
+    const id = req.params.id;
+    TutorService.getRate(id)
+      .then(results => {
+        const rate = results[0].avg_rate;
+        res.send({ rate });
+      })
+      .catch();
+  });
+
   router.post("/availableTime", (req, res) => {
     TutorService.insertAvailableTime(req.body)
       .then(results => {

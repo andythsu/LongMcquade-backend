@@ -46,6 +46,20 @@ module.exports = (() => {
     });
   }
 
+  function getRate(tutorId) {
+    return new Promise((resolve, reject) => {
+      const dbConnection = DbService.getConnection();
+      const sql = `select avg(rate) as avg_rate from tutor_rating where tutorId = ${tutorId};`;
+      dbConnection.query(sql, (err, result) => {
+        if (err) {
+          console.log("sql", sql);
+          reject(err);
+        }
+        resolve(result);
+      });
+    });
+  }
+
   function bookTutor(reqBody) {
     const { studentId, tutorId, available_time } = reqBody;
     return new Promise((resolve, reject) => {
@@ -141,6 +155,7 @@ module.exports = (() => {
     getUpcomingClasses,
     insertAvailableTime,
     getTutorAvailableTime,
-    getPassedClasses
+    getPassedClasses,
+    getRate
   };
 })();
