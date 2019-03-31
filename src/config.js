@@ -1,19 +1,11 @@
 const dbConfig = {
-  host: "localhost",
-  user: "root",
-  password: "",
-  database: "longmcquade"
-};
-
-const dbProdConfig = {
-  host: "remotemysql.com",
-  user: "2dqTYhXoQo",
-  password: "ZVv85fDuQq",
-  database: "2dqTYhXoQo"
+  host: process.env.dbHost || "localhost",
+  user: process.env.dbUser || "root",
+  password: process.env.dbPassword || "",
+  database: process.env.dbDatabase || "longmcquade"
 };
 
 const serverConfig = {
-  port: process.env.PORT || 3000,
-  prod: true
+  port: process.env.PORT || 3000
 };
-module.exports = { dbConfig, serverConfig, dbProdConfig };
+module.exports = { dbConfig, serverConfig };

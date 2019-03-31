@@ -4,7 +4,7 @@ const config = require("./config.js");
 const bodyParser = require("body-parser");
 const mysql = require("mysql");
 
-const { dbConfig, serverConfig, dbProdConfig } = config;
+const { serverConfig, dbConfig } = config;
 
 const { DbService } = require("./services");
 
@@ -30,16 +30,8 @@ app.use("/", (req, res) => {
   res.send("hello world");
 });
 
-let connectionConfig = {};
-
-if (serverConfig.prod) {
-  connectionConfig = dbProdConfig;
-} else {
-  connectionConfig = dbConfig;
-}
-
 try {
-  var connection = mysql.createConnection(connectionConfig);
+  var connection = mysql.createConnection(dbConfig);
   connection.connect(err => {
     if (err) {
       // throw new Error(err);
